@@ -2,6 +2,31 @@ import React from "react";
 
 const services = [
   {
+    title: "Process and Engineering Drawings",
+    description:
+      "Comprehensive process and engineering drawings prepared to industry standards, detailing process flows, equipment specifications, and engineering requirements for industrial and manufacturing facilities.",
+  },
+  {
+    title: "Industrial Layouts",
+    description:
+      "Detailed industrial facility layouts including equipment placement, material flow, safety zones, and operational efficiency optimization for manufacturing and processing plants.",
+  },
+  {
+    title: "P&IDs (Piping and Instrumentation Diagrams)",
+    description:
+      "Accurate P&IDs showing process flow, piping systems, instrumentation, control loops, and equipment interconnections essential for process engineering and plant operations.",
+  },
+  {
+    title: "HMECs (Hazardous Material Emergency Control)",
+    description:
+      "Specialized drawings for hazardous material emergency control systems, safety protocols, containment measures, and emergency response planning documentation.",
+  },
+  {
+    title: "Civil Drawings",
+    description:
+      "Complete civil engineering drawings including site plans, grading, drainage, utilities, roads, foundations, and infrastructure layouts for construction and development projects.",
+  },
+  {
     title: "Architectural Building Drawings",
     description:
       "Complete drawing sets including plans, elevations, sections, and schedules prepared to standard scales and suitable for construction teams and approvals.",
@@ -39,34 +64,37 @@ const Services = () => {
       id="services"
       className="section-container py-12 md:py-16 lg:py-20 border-t border-slate-900/60"
     >
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
-        <div>
-          <h2 className="text-lg sm:text-xl font-semibold tracking-tight text-slate-50">
-            Services tailored to your project stage and level of detail.
-          </h2>
-          <p className="mt-3 max-w-xl text-sm sm:text-base text-slate-400 leading-relaxed">
-            Whether you are exploring layout options, preparing for approvals, or issuing final
-            drawings to site, services can be scaled to match the information you need.
-          </p>
-        </div>
-        <p className="text-xs text-slate-500 max-w-sm">
-          Drawings are typically provided in PDF format for sharing and printing, with digital
-          CAD files available on request depending on scope.
+      <div className="text-center mb-12">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-50 mb-4">
+          What We Do
+        </h2>
+        <p className="max-w-3xl mx-auto text-base sm:text-lg text-slate-400 leading-relaxed">
+          Bringing engineering and architectural designs to life with construction-ready documents
+          and technical documentation that drive project success.
         </p>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {services.map((service) => (
           <article
             key={service.title}
-            className="h-full rounded-xl border border-slate-800 bg-slate-950/60 p-5 hover:border-accent/80 transition-colors"
+            className="h-full rounded-xl border border-slate-800 bg-slate-950/60 p-6 hover:border-accent/80 hover:bg-slate-950/80 transition-all group"
           >
-            <h3 className="text-sm font-semibold text-slate-50">{service.title}</h3>
-            <p className="mt-2 text-xs sm:text-sm text-slate-400 leading-relaxed">
+            <h3 className="text-base font-semibold text-slate-50 mb-3 group-hover:text-accent transition-colors">
+              {service.title}
+            </h3>
+            <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
               {service.description}
             </p>
           </article>
         ))}
+      </div>
+      
+      <div className="mt-12 text-center">
+        <p className="text-sm text-slate-500 max-w-2xl mx-auto">
+          Drawings are typically provided in PDF format for sharing and printing, with digital
+          CAD files available on request depending on scope.
+        </p>
       </div>
     </section>
   );

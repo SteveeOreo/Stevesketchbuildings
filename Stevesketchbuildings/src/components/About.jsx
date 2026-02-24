@@ -8,59 +8,61 @@ const About = () => {
     >
       <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-start">
         <div>
-          <h2 className="text-lg sm:text-xl font-semibold tracking-tight text-slate-50">
-            Architectural drawings with clarity, precision, and buildability.
+          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-50">
+            Engineering drawings with precision, clarity, and technical excellence.
           </h2>
-          <p className="mt-4 text-sm sm:text-base text-slate-400 leading-relaxed max-w-xl">
-            I am an architectural professional focused on producing clear, coordinated drawings
-            that help clients, contractors, and consultants build with confidence. Every line on
-            a drawing serves a purpose – from the first concept layout to detailed construction
-            documentation.
+          <p className="mt-4 text-base sm:text-lg text-slate-400 leading-relaxed max-w-xl">
+            We specialize in producing comprehensive engineering and architectural drawings that
+            meet industry standards and support successful project execution. From complex P&IDs
+            and process flow diagrams to detailed architectural plans and civil drawings – every
+            document is prepared with technical accuracy and attention to detail.
           </p>
-          <p className="mt-3 text-sm sm:text-base text-slate-400 leading-relaxed max-w-xl">
-            My work balances creative design with technical accuracy and regulatory compliance so
-            your project can progress smoothly through planning, approvals, and on-site execution.
+          <p className="mt-3 text-base sm:text-lg text-slate-400 leading-relaxed max-w-xl">
+            Our work spans process engineering, industrial layouts, architectural documentation,
+            and civil engineering drawings. We ensure all drawings are coordinated, compliant with
+            relevant standards, and ready for construction, approvals, and operational use.
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 text-xs text-slate-400">
-          <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-4">
-            <p className="text-[0.7rem] font-semibold tracking-[0.22em] uppercase text-slate-500">
-              Experience
+        <div className="grid gap-4 sm:grid-cols-2 text-sm text-slate-400">
+          <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-5">
+            <p className="text-xs font-semibold tracking-[0.22em] uppercase text-slate-500">
+              Expertise
             </p>
-            <p className="mt-3 text-sm text-slate-200">
-              Residential & light commercial projects
+            <p className="mt-3 text-base text-slate-200">
+              Process Engineering & Industrial Projects
             </p>
             <p className="mt-1">
-              New builds, extensions, renovations, and internal reconfigurations across a range
-              of project scales.
+              P&IDs, process flows, industrial layouts, HMECs, and engineering documentation for
+              manufacturing, processing, and industrial facilities.
             </p>
           </div>
 
-          <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-4">
-            <p className="text-[0.7rem] font-semibold tracking-[0.22em] uppercase text-slate-500">
-              Detail & Standards
+          <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-5">
+            <p className="text-xs font-semibold tracking-[0.22em] uppercase text-slate-500">
+              Standards & Quality
             </p>
-            <p className="mt-3 text-sm text-slate-200">
-              Drawings aligned with construction practice
+            <p className="mt-3 text-base text-slate-200">
+              Industry-standard documentation
             </p>
             <p className="mt-1">
-              Coordinated plans, sections, elevations, and details prepared to standard scales
-              and ready for site use.
+              All drawings prepared to relevant engineering standards, with proper instrumentation,
+              piping specifications, and technical details ready for construction and operations.
             </p>
           </div>
 
-          <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-4 sm:col-span-2">
-            <p className="text-[0.7rem] font-semibold tracking-[0.22em] uppercase text-slate-500">
-              Client-Focused Approach
+          <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-5 sm:col-span-2">
+            <p className="text-xs font-semibold tracking-[0.22em] uppercase text-slate-500">
+              Comprehensive Services
             </p>
-            <p className="mt-3 text-sm text-slate-200">
-              Clear communication from first sketch to final issue.
+            <p className="mt-3 text-base text-slate-200">
+              From concept to construction-ready documentation.
             </p>
             <p className="mt-1">
-              I take time to understand how you intend to use your space, coordinate design
-              options, and translate decisions into precise drawings that your builder can rely
-              on.
+              We provide end-to-end drawing services covering process engineering, architectural
+              plans, civil drawings, and technical documentation. Every project is handled with
+              precision and delivered in formats suitable for your team, contractors, and
+              regulatory submissions.
             </p>
           </div>
         </div>
