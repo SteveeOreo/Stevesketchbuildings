@@ -9,12 +9,12 @@ const SLIDES = [
   {
     image: "/images/samples/light%20mode.JPEG",
     title: "Clear, Buildable Documentation",
-    subtitle: "From concept to construction with industry-standard drafting.",
+    subtitle: "Rendered visualizations and light-mode drawings for construction and approvals.",
   },
   {
     image: "/images/samples/dark%20mode.JPEG",
-    title: "Engineering & Design Excellence",
-    subtitle: "P&IDs, layouts, and structural documentation for clear, buildable outcomes.",
+    title: "Technical & Blueprint Views",
+    subtitle: "Blueprint and dark-mode drafting for engineering and architectural projects.",
   },
 ];
 
@@ -31,14 +31,14 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="relative min-h-[85vh] md:min-h-[90vh] flex flex-col overflow-hidden pt-0 mt-0"
+      className="relative min-h-[85vh] md:min-h-[90vh] flex flex-col overflow-hidden pt-0 mt-0 bg-black"
       aria-label="Hero"
     >
-      {/* Mobile: contain so full image is visible; desktop: cover. Light fill on mobile (no black bar). */}
+      {/* Slide images with fade */}
       {SLIDES.map((s, i) => (
         <div
           key={s.image}
-          className="absolute inset-0 bg-center bg-no-repeat transition-opacity duration-700 ease-out bg-stone-200 md:bg-transparent bg-contain md:bg-cover"
+          className="absolute inset-0 bg-black transition-opacity duration-700 ease-out bg-center bg-no-repeat bg-cover"
           style={{
             backgroundImage: `url(${s.image})`,
             opacity: i === index ? 1 : 0,
@@ -47,17 +47,19 @@ const Hero = () => {
           aria-hidden={i !== index}
         />
       ))}
-      {/* Gradient: light in center, stronger at bottom so copy strip stays legible */}
+
+      {/* Black gradient: keeps write-up readable while slides change */}
       <div
         className="absolute inset-0 z-[1] pointer-events-none"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(28,25,23,0.25) 0%, transparent 40%, transparent 55%, rgba(28,25,23,0.92) 100%)",
+            "linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 35%, transparent 50%, rgba(0,0,0,0.92) 85%, rgba(0,0,0,0.98) 100%)",
         }}
+        aria-hidden
       />
 
-      {/* Write-up strip: overlaid on top of images at the bottom */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 w-full border-t border-white/10 bg-stone-900/90 backdrop-blur-sm">
+      {/* Write-up strip: overlaid at bottom, updates with each slide */}
+      <div className="absolute bottom-0 left-0 right-0 z-10 w-full border-t border-white/10 bg-black/90 backdrop-blur-sm">
         <div className="section-container py-6 lg:py-8 pl-4 pr-4 lg:pl-6 lg:pr-8">
           <div className="max-w-3xl flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
             <div key={index} className="animate-fade-in min-w-0">
@@ -82,7 +84,6 @@ const Hero = () => {
                 </a>
               </div>
             </div>
-            {/* Slide indicators inside strip, aligned right on desktop */}
             <div
               className="flex shrink-0 gap-2 sm:pb-0.5"
               role="tablist"

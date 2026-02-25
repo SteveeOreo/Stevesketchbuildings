@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { services } from "../data/services";
 
 const ServiceDetailModal = ({ service, onClose }) => {
@@ -47,33 +47,72 @@ const ServiceDetailModal = ({ service, onClose }) => {
 const Services = () => {
   const [selectedService, setSelectedService] = useState(null);
   const scrollRef = useRef(null);
+  const sectionRef = useRef(null);
   const pausedRef = useRef(false);
   const pauseTimeoutRef = useRef(null);
+  const intervalRef = useRef(null);
 
-  useEffect(() => {
-    let rafId;
-    const step = 0.7;
-    const tick = () => {
-      const el = scrollRef.current;
-      if (!el) {
-        rafId = requestAnimationFrame(tick);
-        return;
-      }
-      if (pausedRef.current) {
-        rafId = requestAnimationFrame(tick);
-        return;
-      }
-      const maxScroll = el.scrollWidth - el.clientWidth;
-      if (maxScroll <= 0) {
-        rafId = requestAnimationFrame(tick);
-        return;
-      }
-      el.scrollLeft += step;
-      if (el.scrollLeft >= maxScroll - 1) el.scrollLeft = 0;
-      rafId = requestAnimationFrame(tick);
+  useLayoutEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+
+    const startAutoScroll = () => {
+      if (intervalRef.current) return;
+      if (!mediaQuery.matches) return;
+      intervalRef.current = setInterval(() => {
+        const el = scrollRef.current;
+        if (!el || !mediaQuery.matches) return;
+        if (el.clientWidth === 0) return;
+        if (pausedRef.current) return;
+        const maxScroll = el.scrollWidth - el.clientWidth;
+        if (maxScroll <= 0) return;
+        el.scrollLeft += 2;
+        if (el.scrollLeft >= maxScroll - 2) el.scrollLeft = 0;
+      }, 40);
     };
-    rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
+
+    const stopAutoScroll = () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && mediaQuery.matches) {
+          startAutoScroll();
+        } else {
+          stopAutoScroll();
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px' }
+    );
+
+    observer.observe(section);
+
+    // Start immediately if section is already in view (don't wait for async callback)
+    const rect = section.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight && rect.bottom > 0;
+    if (inView && mediaQuery.matches) startAutoScroll();
+
+    const onMediaChange = () => {
+      if (!mediaQuery.matches) stopAutoScroll();
+      else {
+        const r = section.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) startAutoScroll();
+      }
+    };
+    mediaQuery.addEventListener('change', onMediaChange);
+
+    return () => {
+      observer.disconnect();
+      mediaQuery.removeEventListener('change', onMediaChange);
+      stopAutoScroll();
+    };
   }, []);
 
   const pauseAutoScroll = () => {
@@ -86,7 +125,7 @@ const Services = () => {
   };
 
   return (
-    <section id="services" className="section-padding bg-white">
+    <section ref={sectionRef} id="services" className="section-padding bg-white">
       <div className="section-container">
         <div className="mb-8 md:mb-16">
           <h2 className="section-heading">Services</h2>
@@ -96,14 +135,16 @@ const Services = () => {
         </div>
 
         {/* Mobile: horizontal scroll strip – minimal vertical scroll */}
-        <div className="md:hidden">
+        <div className="md:hidden w-full overflow-hidden">
           <p className="text-xs font-medium text-stone-500 uppercase tracking-wider mb-3">Swipe to explore</p>
           <div
             ref={scrollRef}
             onTouchStart={pauseAutoScroll}
             onWheel={pauseAutoScroll}
-            className="flex gap-3 overflow-x-auto pb-2 -mx-1 snap-x snap-mandatory scrollbar-hide"
+            className="overflow-x-scroll overflow-y-hidden pb-2 -mx-1 snap-x snap-mandatory scrollbar-hide"
+            style={{ WebkitOverflowScrolling: 'touch', width: '100%' }}
           >
+            <div className="flex gap-3 w-max">
             {services.map((service, index) => (
               <button
                 key={service.title}
@@ -123,6 +164,7 @@ const Services = () => {
                 <span className="inline-block mt-2 text-xs font-medium text-accent">View details</span>
               </button>
             ))}
+            </div>
           </div>
         </div>
 

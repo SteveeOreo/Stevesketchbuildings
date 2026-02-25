@@ -99,7 +99,7 @@ const Header = () => {
             height={88}
             className="h-20 w-20 flex-shrink-0 object-contain object-center sm:h-[5rem] sm:w-[5rem] lg:h-24 lg:w-24"
             decoding="async"
-            fetchPriority="high"
+            fetchpriority="high"
           />
           <span className="flex flex-col justify-center leading-tight">
             <span className="font-display font-semibold text-stone-900 text-base tracking-tight lg:text-lg">
