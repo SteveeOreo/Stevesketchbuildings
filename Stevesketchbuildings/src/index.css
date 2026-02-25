@@ -2,11 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-slate-950 text-slate-100 antialiased;
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+  body {
+    @apply font-body text-stone-800 antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-semibold tracking-tight text-stone-900;
+  }
+}
+
+@layer utilities {
+  @keyframes bounce-attention {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .animate-bounce-attention {
+    animation: bounce-attention 2s ease-in-out infinite;
+  }
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out forwards;
+  }
 }
 
 .section-container {
-  @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  @apply max-w-section mx-auto px-6 lg:px-8;
 }
 
+.section-padding {
+  @apply py-20 lg:py-24;
+}
+
+.section-heading {
+  @apply font-display text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl;
+}
+
+.label-muted {
+  @apply text-xs font-medium uppercase tracking-widest text-stone-400;
+}
+
+.input-field {
+  @apply mt-2 block w-full border border-neutral-border bg-white px-4 py-3 text-stone-900 placeholder:text-stone-400 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent;
+}
