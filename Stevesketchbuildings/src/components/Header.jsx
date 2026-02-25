@@ -125,7 +125,7 @@ const Header = () => {
           </div>
           <a href="#projects" className="text-stone-700 hover:text-accent">Projects</a>
           <a href="#contact" className="text-stone-700 hover:text-accent">Contact</a>
-          <a href="#contact" className="bg-accent text-white px-5 py-2.5 text-sm font-medium hover:bg-accent-dark">
+          <a href="#contact" className="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2">
             Get in Touch
           </a>
         </nav>
