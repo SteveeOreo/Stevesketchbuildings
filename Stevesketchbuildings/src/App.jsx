@@ -15,8 +15,8 @@ const App = () => {
       <main className="flex-1 pb-14">
         <Hero />
         <About />
-        <Services />
         <Projects />
+        <Services />
         <Contact />
       </main>
       <Footer />
