@@ -12,7 +12,7 @@ const App = () => {
   return (
     <div className="flex min-h-screen flex-col bg-white text-stone-900">
       <Header />
-      <main className="flex-1 pb-14">
+      <main className="flex-1 pb-14 pt-0">
         <Hero />
         <About />
         <Projects />

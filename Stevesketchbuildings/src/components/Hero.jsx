@@ -31,14 +31,14 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="relative min-h-[90vh] flex flex-col overflow-hidden"
+      className="relative min-h-[85vh] md:min-h-[90vh] flex flex-col overflow-hidden pt-0 mt-0"
       aria-label="Hero"
     >
-      {/* Full-bleed backgrounds – imagery leads, no overlap */}
+      {/* Mobile: contain so full image is visible; desktop: cover. Light fill on mobile (no black bar). */}
       {SLIDES.map((s, i) => (
         <div
           key={s.image}
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-700 ease-out"
+          className="absolute inset-0 bg-center bg-no-repeat transition-opacity duration-700 ease-out bg-stone-200 md:bg-transparent bg-contain md:bg-cover"
           style={{
             backgroundImage: `url(${s.image})`,
             opacity: i === index ? 1 : 0,

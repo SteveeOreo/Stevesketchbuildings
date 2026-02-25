@@ -1,76 +1,132 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { services } from "../data/services";
 
-const Services = () => {
-  const [expandedIndex, setExpandedIndex] = useState(null);
+const ServiceDetailModal = ({ service, onClose }) => {
+  useEffect(() => {
+    const handleEscape = (e) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", handleEscape);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
 
-  const toggle = (index) => {
-    setExpandedIndex((prev) => (prev === index ? null : index));
+  if (!service) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="service-modal-title"
+    >
+      <div className="absolute inset-0 bg-stone-900/60" onClick={onClose} aria-hidden="true" />
+      <div className="relative w-full max-h-[85vh] overflow-y-auto bg-white rounded-t-2xl sm:rounded-xl shadow-xl max-w-lg sm:max-h-[80vh] animate-slide-up">
+        <div className="sticky top-0 flex items-center justify-between p-4 border-b border-neutral-border bg-white">
+          <h3 id="service-modal-title" className="font-display text-lg font-semibold text-stone-900 pr-10">
+            {service.title}
+          </h3>
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 text-stone-500 hover:text-stone-900 rounded-full hover:bg-neutral-paper focus:outline-none focus:ring-2 focus:ring-accent"
+            aria-label="Close"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <p className="p-4 text-sm leading-relaxed text-stone-600">{service.description}</p>
+      </div>
+    </div>
+  );
+};
+
+const Services = () => {
+  const [selectedService, setSelectedService] = useState(null);
+  const scrollRef = useRef(null);
+  const pausedRef = useRef(false);
+  const pauseTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    let rafId;
+    const step = 0.7;
+    const tick = () => {
+      const el = scrollRef.current;
+      if (!el) {
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
+      if (pausedRef.current) {
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      if (maxScroll <= 0) {
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
+      el.scrollLeft += step;
+      if (el.scrollLeft >= maxScroll - 1) el.scrollLeft = 0;
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, []);
+
+  const pauseAutoScroll = () => {
+    pausedRef.current = true;
+    if (pauseTimeoutRef.current) clearTimeout(pauseTimeoutRef.current);
+    pauseTimeoutRef.current = setTimeout(() => {
+      pausedRef.current = false;
+      pauseTimeoutRef.current = null;
+    }, 2500);
   };
 
   return (
     <section id="services" className="section-padding bg-white">
       <div className="section-container">
-        <div className="mb-16">
+        <div className="mb-8 md:mb-16">
           <h2 className="section-heading">Services</h2>
-          <p className="mt-4 max-w-2xl text-stone-600">
+          <p className="mt-3 md:mt-4 max-w-2xl text-stone-600 text-sm md:text-base">
             Construction-ready documentation for industrial and architectural projects.
           </p>
         </div>
 
-        {/* Mobile: expandable cards */}
-        <div className="md:hidden space-y-3">
-          {services.map((service, index) => {
-            const isExpanded = expandedIndex === index;
-            return (
-              <div
+        {/* Mobile: horizontal scroll strip – minimal vertical scroll */}
+        <div className="md:hidden">
+          <p className="text-xs font-medium text-stone-500 uppercase tracking-wider mb-3">Swipe to explore</p>
+          <div
+            ref={scrollRef}
+            onTouchStart={pauseAutoScroll}
+            onWheel={pauseAutoScroll}
+            className="flex gap-3 overflow-x-auto pb-2 -mx-1 snap-x snap-mandatory scrollbar-hide"
+          >
+            {services.map((service, index) => (
+              <button
                 key={service.title}
-                className="rounded-lg border border-neutral-border bg-white shadow-sm overflow-hidden transition-shadow hover:shadow-md"
+                type="button"
+                onClick={() => setSelectedService(service)}
+                className="flex-shrink-0 w-[72vw] max-w-[320px] snap-center rounded-xl border border-neutral-border bg-white p-4 text-left shadow-sm hover:shadow-md hover:border-accent/30 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
               >
-                <button
-                  type="button"
-                  onClick={() => toggle(index)}
-                  className="w-full flex items-center justify-between gap-3 p-4 text-left focus:outline-none focus:ring-2 focus:ring-accent focus:ring-inset"
-                  aria-expanded={isExpanded}
-                  aria-controls={`service-detail-${index}`}
-                  id={`service-trigger-${index}`}
-                >
-                  <h3 className="font-display text-base font-semibold tracking-tight text-stone-900 pr-2">
-                    {service.title}
-                  </h3>
-                  <span
-                    className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-neutral-paper text-stone-600 transition-transform duration-200 ${
-                      isExpanded ? "rotate-180" : ""
-                    }`}
-                    aria-hidden
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </span>
-                </button>
-                <div
-                  id={`service-detail-${index}`}
-                  role="region"
-                  aria-labelledby={`service-trigger-${index}`}
-                  className={`grid transition-[grid-template-rows] duration-200 ease-out ${
-                    isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                  }`}
-                >
-                  <div className="overflow-hidden">
-                    <div className="px-4 pb-4 pt-0">
-                      <p className="text-sm leading-relaxed text-stone-600 border-t border-neutral-border pt-3">
-                        {service.description}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+                <span className="text-[10px] font-semibold text-accent uppercase tracking-wider">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 className="font-display text-sm font-semibold tracking-tight text-stone-900 mt-1 line-clamp-2">
+                  {service.title}
+                </h3>
+                <p className="mt-2 text-xs text-stone-500 line-clamp-2 leading-relaxed">
+                  {service.description}
+                </p>
+                <span className="inline-block mt-2 text-xs font-medium text-accent">View details</span>
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Desktop: grid as before */}
+        {/* Desktop: grid */}
         <div className="hidden md:grid gap-px bg-neutral-border md:grid-cols-2 lg:grid-cols-3">
           {services.map((service) => (
             <article key={service.title} className="bg-white p-8">
@@ -84,6 +140,13 @@ const Services = () => {
           ))}
         </div>
       </div>
+
+      {selectedService && (
+        <ServiceDetailModal
+          service={selectedService}
+          onClose={() => setSelectedService(null)}
+        />
+      )}
     </section>
   );
 };
