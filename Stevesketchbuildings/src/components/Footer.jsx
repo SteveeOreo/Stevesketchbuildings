@@ -9,7 +9,9 @@ const socialLinks = [
   { name: "YouTube", href: "https://www.youtube.com/", icon: "M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" },
 ];
 
-const SCROLL_THRESHOLD = 120;
+const SCROLL_THRESHOLD_DESKTOP = 120;
+const BOTTOM_THRESHOLD = 100; // px from bottom to consider "at bottom"
+const MOBILE_MAX_WIDTH = 767;
 
 const Footer = () => {
   const [showFooter, setShowFooter] = useState(false);
@@ -24,25 +26,40 @@ const Footer = () => {
       setShowFooter(false);
     };
 
+    const isMobile = () => window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH}px)`).matches;
+
+    const isAtBottom = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = window.innerHeight;
+      return scrollTop + clientHeight >= scrollHeight - BOTTOM_THRESHOLD;
+    };
+
     const onScroll = () => {
-      if (window.scrollY > SCROLL_THRESHOLD) {
-        if (hideTimeoutRef.current) {
-          clearTimeout(hideTimeoutRef.current);
-          hideTimeoutRef.current = null;
-        }
-        setShowFooter(true);
+      if (isMobile()) {
+        setShowFooter(isAtBottom());
       } else {
-        hideFooter();
+        if (window.scrollY > SCROLL_THRESHOLD_DESKTOP) {
+          if (hideTimeoutRef.current) {
+            clearTimeout(hideTimeoutRef.current);
+            hideTimeoutRef.current = null;
+          }
+          setShowFooter(true);
+        } else {
+          hideFooter();
+        }
       }
     };
 
     const onHashChange = () => {
       const isHome = window.location.hash === "#home" || window.location.hash === "";
-      if (isHome) hideFooter();
+      if (isHome && !isMobile()) hideFooter();
+      if (isHome && isMobile()) setShowFooter(false);
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("hashchange", onHashChange);
+    onScroll();
 
     return () => {
       window.removeEventListener("scroll", onScroll);
@@ -57,11 +74,12 @@ const Footer = () => {
         showFooter ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"
       }`}
     >
-      <div className="section-container flex flex-wrap items-center justify-between gap-4">
+      {/* Desktop: row layout */}
+      <div className="section-container hidden sm:flex flex-wrap items-center justify-between gap-4">
         <p className="shrink-0">
           © {new Date().getFullYear()} Steve Dynamic Sketches and Frameworks.
         </p>
-        <div className="hidden shrink-0 items-center gap-4 sm:flex">
+        <div className="shrink-0 items-center gap-4 flex">
           <a href="#privacy" className="hover:text-stone-300 transition-colors">Privacy Policy</a>
           <span className="text-stone-500">|</span>
           <a href="#terms" className="hover:text-stone-300 transition-colors">Terms of Use</a>
@@ -69,21 +87,52 @@ const Footer = () => {
           <a href="#home" className="hover:text-stone-300 transition-colors">Sitemap</a>
         </div>
         <ul className="flex shrink-0 items-center gap-5">
-        {socialLinks.map((link, i) => (
-          <li key={i}>
-            <a
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={link.name}
-              className="text-white hover:text-stone-300 transition-colors"
-            >
-              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d={link.icon} />
-              </svg>
-            </a>
-          </li>
-        ))}
+          {socialLinks.map((link, i) => (
+            <li key={i}>
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={link.name}
+                className="text-white hover:text-stone-300 transition-colors"
+              >
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d={link.icon} />
+                </svg>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Mobile: centered stacked layout */}
+      <div className="section-container flex flex-col sm:hidden items-center justify-center gap-3 text-center py-2">
+        <p className="text-white/95 text-xs leading-snug px-2">
+          © {new Date().getFullYear()} Steve Dynamic Sketches and Frameworks.
+        </p>
+        <div className="flex items-center justify-center gap-3 text-white/90">
+          <a href="#privacy" className="text-xs hover:text-white transition-colors">Privacy Policy</a>
+          <span className="text-stone-500 text-xs">|</span>
+          <a href="#terms" className="text-xs hover:text-white transition-colors">Terms of Use</a>
+          <span className="text-stone-500 text-xs">|</span>
+          <a href="#home" className="text-xs hover:text-white transition-colors">Sitemap</a>
+        </div>
+        <ul className="flex items-center justify-center gap-4">
+          {socialLinks.map((link, i) => (
+            <li key={i}>
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={link.name}
+                className="text-white hover:text-stone-300 transition-colors"
+              >
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d={link.icon} />
+                </svg>
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
     </footer>
