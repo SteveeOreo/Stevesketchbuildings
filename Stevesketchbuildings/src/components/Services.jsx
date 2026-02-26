@@ -44,6 +44,11 @@ const ServiceDetailModal = ({ service, onClose }) => {
   );
 };
 
+const SCROLL_STEP = 2;
+const SCROLL_INTERVAL_MS = 40;
+const PAUSE_AFTER_INTERACTION_MS = 2500;
+const MOBILE_MAX_WIDTH = 767;
+
 const Services = () => {
   const [selectedService, setSelectedService] = useState(null);
   const scrollRef = useRef(null);
@@ -52,12 +57,22 @@ const Services = () => {
   const pauseTimeoutRef = useRef(null);
   const intervalRef = useRef(null);
 
+  const pauseAutoScroll = () => {
+    pausedRef.current = true;
+    if (pauseTimeoutRef.current) clearTimeout(pauseTimeoutRef.current);
+    pauseTimeoutRef.current = setTimeout(() => {
+      pausedRef.current = false;
+      pauseTimeoutRef.current = null;
+    }, PAUSE_AFTER_INTERACTION_MS);
+  };
+
   useLayoutEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const mediaQuery = window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH}px)`);
 
     const startAutoScroll = () => {
       if (intervalRef.current) return;
       if (!mediaQuery.matches) return;
+
       intervalRef.current = setInterval(() => {
         const el = scrollRef.current;
         if (!el || !mediaQuery.matches) return;
@@ -65,9 +80,9 @@ const Services = () => {
         if (pausedRef.current) return;
         const maxScroll = el.scrollWidth - el.clientWidth;
         if (maxScroll <= 0) return;
-        el.scrollLeft += 2;
-        if (el.scrollLeft >= maxScroll - 2) el.scrollLeft = 0;
-      }, 40);
+        el.scrollLeft += SCROLL_STEP;
+        if (el.scrollLeft >= maxScroll - SCROLL_STEP) el.scrollLeft = 0;
+      }, SCROLL_INTERVAL_MS);
     };
 
     const stopAutoScroll = () => {
@@ -84,45 +99,41 @@ const Services = () => {
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting && mediaQuery.matches) {
-          startAutoScroll();
+          requestAnimationFrame(() => requestAnimationFrame(startAutoScroll));
         } else {
           stopAutoScroll();
         }
       },
-      { threshold: 0.1, rootMargin: '0px' }
+      { threshold: 0.1, rootMargin: "0px" }
     );
 
     observer.observe(section);
 
-    // Start immediately if section is already in view (don't wait for async callback)
-    const rect = section.getBoundingClientRect();
-    const inView = rect.top < window.innerHeight && rect.bottom > 0;
-    if (inView && mediaQuery.matches) startAutoScroll();
+    if (mediaQuery.matches) {
+      const rect = section.getBoundingClientRect();
+      const inView = rect.top < window.innerHeight && rect.bottom > 0;
+      if (inView) requestAnimationFrame(() => requestAnimationFrame(startAutoScroll));
+    }
 
     const onMediaChange = () => {
-      if (!mediaQuery.matches) stopAutoScroll();
-      else {
+      if (!mediaQuery.matches) {
+        stopAutoScroll();
+      } else {
         const r = section.getBoundingClientRect();
-        if (r.top < window.innerHeight && r.bottom > 0) startAutoScroll();
+        if (r.top < window.innerHeight && r.bottom > 0) {
+          requestAnimationFrame(() => requestAnimationFrame(startAutoScroll));
+        }
       }
     };
-    mediaQuery.addEventListener('change', onMediaChange);
+    mediaQuery.addEventListener("change", onMediaChange);
 
     return () => {
       observer.disconnect();
-      mediaQuery.removeEventListener('change', onMediaChange);
+      mediaQuery.removeEventListener("change", onMediaChange);
       stopAutoScroll();
+      if (pauseTimeoutRef.current) clearTimeout(pauseTimeoutRef.current);
     };
   }, []);
-
-  const pauseAutoScroll = () => {
-    pausedRef.current = true;
-    if (pauseTimeoutRef.current) clearTimeout(pauseTimeoutRef.current);
-    pauseTimeoutRef.current = setTimeout(() => {
-      pausedRef.current = false;
-      pauseTimeoutRef.current = null;
-    }, 2500);
-  };
 
   return (
     <section ref={sectionRef} id="services" className="section-padding bg-white">
@@ -134,42 +145,45 @@ const Services = () => {
           </p>
         </div>
 
-        {/* Mobile: horizontal scroll strip – minimal vertical scroll */}
-        <div className="md:hidden w-full overflow-hidden">
+        {/* Mobile: horizontal scroll strip with auto-scroll */}
+        <div className="md:hidden w-full overflow-hidden min-w-0">
           <p className="text-xs font-medium text-stone-500 uppercase tracking-wider mb-3">Swipe to explore</p>
           <div
             ref={scrollRef}
             onTouchStart={pauseAutoScroll}
+            onPointerDown={pauseAutoScroll}
             onWheel={pauseAutoScroll}
             className="overflow-x-scroll overflow-y-hidden pb-2 -mx-1 snap-x snap-mandatory scrollbar-hide"
-            style={{ WebkitOverflowScrolling: 'touch', width: '100%' }}
+            style={{ WebkitOverflowScrolling: "touch", width: "100%" }}
+            role="region"
+            aria-label="Services list"
           >
-            <div className="flex gap-3 w-max">
-            {services.map((service, index) => (
-              <button
-                key={service.title}
-                type="button"
-                onClick={() => setSelectedService(service)}
-                className="flex-shrink-0 w-[72vw] max-w-[320px] snap-center rounded-xl border border-neutral-border bg-white p-4 text-left shadow-sm hover:shadow-md hover:border-accent/30 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
-              >
-                <span className="text-[10px] font-semibold text-accent uppercase tracking-wider">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <h3 className="font-display text-sm font-semibold tracking-tight text-stone-900 mt-1 line-clamp-2">
-                  {service.title}
-                </h3>
-                <p className="mt-2 text-xs text-stone-500 line-clamp-2 leading-relaxed">
-                  {service.description}
-                </p>
-                <span className="inline-block mt-2 text-xs font-medium text-accent">View details</span>
-              </button>
-            ))}
+            <div className="flex gap-3 w-max min-h-0">
+              {services.map((service, index) => (
+                <button
+                  key={service.title}
+                  type="button"
+                  onClick={() => setSelectedService(service)}
+                  className="flex-shrink-0 w-[72vw] max-w-[320px] snap-center rounded-xl border border-neutral-border bg-white p-4 text-left shadow-sm hover:shadow-md hover:border-accent/30 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                >
+                  <span className="text-[10px] font-semibold text-accent uppercase tracking-wider">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="font-display text-sm font-semibold tracking-tight text-stone-900 mt-1 line-clamp-2">
+                    {service.title}
+                  </h3>
+                  <p className="mt-2 text-xs text-stone-500 line-clamp-2 leading-relaxed">
+                    {service.description}
+                  </p>
+                  <span className="inline-block mt-2 text-xs font-medium text-accent">View details</span>
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
         {/* Desktop: grid */}
-        <div className="hidden md:grid gap-px bg-neutral-border md:grid-cols-2 lg:grid-cols-3">
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-neutral-border">
           {services.map((service) => (
             <article key={service.title} className="bg-white p-8">
               <h3 className="font-display text-lg font-semibold tracking-tight text-stone-900">

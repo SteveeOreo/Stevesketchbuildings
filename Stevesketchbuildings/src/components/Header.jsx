@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
 import { servicesNavItems } from "../data/services";
 
 const Dropdown = ({ items, isOpen, setIsOpen, buttonRef, closeTimeoutRef }) => {
@@ -48,32 +49,47 @@ const MobileMenu = ({ isOpen, onClose, items }) => {
   if (!mounted) return null;
   const menuContent = (
     <>
-      <div className={`fixed inset-0 bg-stone-900/40 z-[9998] md:hidden ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`} onClick={onClose} />
-      <div className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white border-l border-neutral-border z-[9999] overflow-y-auto md:hidden ${isOpen ? "translate-x-0" : "translate-x-full"} transition-transform duration-200`}>
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-8">
-            <span className="font-display font-semibold text-stone-900">Menu</span>
-            <button onClick={onClose} className="p-2 text-stone-500 hover:text-stone-900" aria-label="Close">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
-          </div>
-          <nav className="space-y-1">
-            <button onClick={() => setExpanded(!expanded)} className="w-full flex items-center justify-between py-3 text-left text-stone-900 font-medium">
-              Services
-              <svg className={`w-4 h-4 ${expanded ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+      <div className={`fixed inset-0 bg-stone-900/50 z-[9998] md:hidden transition-opacity duration-200 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`} onClick={onClose} />
+      <div className={`fixed top-0 right-0 h-full w-[min(320px,88vw)] max-w-full bg-white shadow-xl z-[9999] md:hidden flex flex-col transition-transform duration-200 ease-out ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
+        <div className="flex items-center justify-between shrink-0 px-5 py-4 border-b border-neutral-border bg-white">
+          <span className="font-display font-semibold text-stone-900 text-lg">Menu</span>
+          <button onClick={onClose} className="p-2 -mr-2 text-stone-500 hover:text-stone-900 rounded-lg hover:bg-stone-100 focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Close menu">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+
+        <nav className="flex-1 overflow-y-auto py-4">
+          <div className="px-5 space-y-1">
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="w-full flex items-center justify-between py-3 px-3 rounded-lg text-left text-stone-800 font-medium hover:bg-stone-50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-inset"
+              aria-expanded={expanded}
+            >
+              <span>Services</span>
+              <svg className={`w-4 h-4 text-stone-400 transition-transform ${expanded ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
             </button>
             {expanded && (
-              <div className="pl-4 space-y-0 border-l-2 border-accent/30">
+              <div className="pl-3 pr-2 pb-2 max-h-[28vh] overflow-y-auto scrollbar-hide border-l-2 border-accent/20 ml-3 space-y-0.5">
                 {items.map((item, i) => (
-                  <a key={i} href={item.href} onClick={onClose} className="block py-3 text-sm font-medium text-stone-700 hover:text-accent hover:pl-2 transition-all border-l-2 border-transparent hover:border-accent">
+                  <a key={i} href={item.href} onClick={onClose} className="block py-2 pl-3 text-xs text-stone-600 hover:text-accent hover:pl-4 transition-all rounded-r-md hover:bg-stone-50">
                     {item.title}
                   </a>
                 ))}
               </div>
             )}
-            <a href="#projects" onClick={onClose} className="block py-3 text-stone-900 font-medium">Projects</a>
-            <a href="#contact" onClick={onClose} className="block py-3 text-stone-900 font-medium">Contact</a>
-          </nav>
+            <a href="#projects" onClick={onClose} className="block py-3 px-3 rounded-lg text-stone-800 font-medium hover:bg-stone-50 transition-colors">
+              Projects
+            </a>
+            <a href="#contact" onClick={onClose} className="block py-3 px-3 rounded-lg text-stone-800 font-medium hover:bg-stone-50 transition-colors">
+              Contact
+            </a>
+          </div>
+        </nav>
+
+        <div className="shrink-0 p-5 pt-2 border-t border-neutral-border bg-stone-50/80">
+          <Link to="/pricing" onClick={onClose} className="block w-full text-center rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-accent-dark transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2">
+            Get Pricing
+          </Link>
         </div>
       </div>
     </>
@@ -93,7 +109,7 @@ const Header = () => {
       <div className="section-container flex items-center justify-between h-20 lg:h-24">
         <a href="#home" className="flex items-center gap-4 shrink-0 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 rounded-sm">
           <img
-            src="/images/samples/SD%20logo.PNG"
+            src="/images/Logos/SD%20logo.PNG"
             alt="Steve Dynamic Sketches and Frameworks"
             width={88}
             height={88}
@@ -125,9 +141,9 @@ const Header = () => {
           </div>
           <a href="#projects" className="text-stone-700 hover:text-accent">Projects</a>
           <a href="#contact" className="text-stone-700 hover:text-accent">Contact</a>
-          <a href="#contact" className="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2">
-            Get in Touch
-          </a>
+          <Link to="/pricing" className="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2">
+            Get Pricing
+          </Link>
         </nav>
         <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden p-2 text-stone-700" aria-label="Menu">
           {mobileOpen ? (

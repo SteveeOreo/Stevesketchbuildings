@@ -2,8 +2,9 @@ import React from "react";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import About from "./components/About";
-import Services from "./components/Services";
+import TechnologyPlatforms from "./components/TechnologyPlatforms";
 import Projects from "./components/Projects";
+import Services from "./components/Services";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import WhatsAppFloat from "./components/WhatsAppFloat";
@@ -15,6 +16,7 @@ const App = () => {
       <main className="flex-1 pb-14 pt-0">
         <Hero />
         <About />
+        <TechnologyPlatforms />
         <Projects />
         <Services />
         <Contact />

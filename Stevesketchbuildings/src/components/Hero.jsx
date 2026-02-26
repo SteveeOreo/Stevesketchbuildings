@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const SLIDES = [
   {
-    image: "/images/samples/drawing.JPEG",
+    image: "/images/homepagepics/drawing.JPEG",
     title: "Precision in Architectural Design",
     subtitle: "Construction-ready documentation and technical drawings.",
   },
   {
-    image: "/images/samples/light%20mode.JPEG",
+    image: "/images/homepagepics/light%20mode.JPEG",
     title: "Clear, Buildable Documentation",
     subtitle: "Rendered visualizations and light-mode drawings for construction and approvals.",
   },
   {
-    image: "/images/samples/dark%20mode.JPEG",
+    image: "/images/homepagepics/dark%20mode.JPEG",
     title: "Technical & Blueprint Views",
     subtitle: "Blueprint and dark-mode drafting for engineering and architectural projects.",
   },
@@ -70,12 +71,12 @@ const Hero = () => {
                 {slide.subtitle}
               </p>
               <div className="mt-5 flex flex-wrap gap-4 lg:hidden">
-                <a
-                  href="#contact"
+                <Link
+                  to="/pricing"
                   className="inline-flex items-center justify-center rounded-md border-2 border-white bg-white px-5 py-2.5 text-sm font-medium text-stone-900 transition-colors hover:bg-stone-100 hover:border-stone-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-stone-900"
                 >
-                  Get in Touch
-                </a>
+                  Get Pricing
+                </Link>
                 <a
                   href="#services"
                   className="inline-flex items-center justify-center rounded-md border-2 border-white/80 bg-transparent px-5 py-2.5 text-sm font-medium text-white transition-colors hover:border-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-stone-900"
