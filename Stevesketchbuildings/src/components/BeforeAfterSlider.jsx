@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 
-const IMAGE_BEFORE = "/images/DragToRevealPics/Dragtorevealhalf1.png";
-const IMAGE_AFTER = "/images/DragToRevealPics/Dragtorevealhalf2.png";
+const IMAGE_BEFORE = "/images/DragToRevealPics/DragtorevealhalfBefore.png";
+const IMAGE_AFTER = "/images/DragToRevealPics/DragtorevealhalfAfter.png";
 
 const BeforeAfterSlider = () => {
   const [position, setPosition] = useState(50);
@@ -67,29 +67,25 @@ const BeforeAfterSlider = () => {
       aria-label="Before and after comparison"
     >
       <div className="section-container">
-        <div className="mx-auto max-w-4xl text-center mb-8 md:mb-10">
-          <h2 className="section-heading">See the difference</h2>
-          <p className="mt-3 text-stone-600 text-sm md:text-base max-w-xl mx-auto">
-            Drag the slider to compare concept and finished detail.
-          </p>
-        </div>
-
         <div
           ref={containerRef}
-          className="relative w-full mx-auto rounded-2xl overflow-hidden select-none touch-none border-2 border-stone-200 shadow-lg ring-1 ring-stone-200/50 bg-stone-100"
-          style={{ aspectRatio: "16/10" }}
+          className="relative w-full mx-auto max-w-2xl rounded-xl overflow-hidden select-none border border-neutral-border bg-stone-100 ring-1 ring-stone-200/50 ring-offset-2 ring-offset-neutral-paper"
+          style={{
+            aspectRatio: "16/10",
+            boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06), 0 10px 28px rgba(0,0,0,0.08)",
+          }}
         >
-          {/* Base layer (before / left) */}
+          {/* Base layer: Before (left side) */}
           <div className="absolute inset-0">
             <img
               src={IMAGE_BEFORE}
-              alt="Before or concept view"
+              alt="Before"
               className="absolute inset-0 h-full w-full object-cover object-center"
               draggable={false}
             />
           </div>
 
-          {/* Reveal layer (after / right) - clipped by position */}
+          {/* Clipped layer: After (right side) */}
           <div
             className="absolute inset-0"
             style={{
@@ -99,7 +95,7 @@ const BeforeAfterSlider = () => {
           >
             <img
               src={IMAGE_AFTER}
-              alt="After or finished view"
+              alt="After"
               className="absolute inset-0 h-full w-full object-cover object-center"
               draggable={false}
             />
@@ -149,10 +145,6 @@ const BeforeAfterSlider = () => {
             </div>
           </div>
         </div>
-
-        <p className="mt-4 text-center text-xs text-stone-500">
-          Drag the handle or use arrow keys to compare.
-        </p>
       </div>
     </section>
   );
