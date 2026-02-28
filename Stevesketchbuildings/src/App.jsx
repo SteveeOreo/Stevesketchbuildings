@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import About from "./components/About";
+import BeforeAfterSlider from "./components/BeforeAfterSlider";
 import TechnologyPlatforms from "./components/TechnologyPlatforms";
 import Projects from "./components/Projects";
 import Services from "./components/Services";
@@ -16,6 +17,7 @@ const App = () => {
       <main className="flex-1 pb-14 pt-0">
         <Hero />
         <About />
+        <BeforeAfterSlider />
         <TechnologyPlatforms />
         <Projects />
         <Services />
