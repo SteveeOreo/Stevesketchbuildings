@@ -3,7 +3,7 @@ import React, { useState, useRef, useCallback, useEffect } from "react";
 const IMAGE_BEFORE = "/images/DragToRevealPics/DragtorevealhalfBefore.png";
 const IMAGE_AFTER = "/images/DragToRevealPics/DragtorevealhalfAfter.png";
 
-const BeforeAfterSlider = () => {
+const BeforeAfterSlider = ({ embedded = false }) => {
   const [position, setPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef(null);
@@ -60,21 +60,15 @@ const BeforeAfterSlider = () => {
     };
   }, [isDragging, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
 
-  return (
-    <section
-      id="compare"
-      className="section-padding border-t border-neutral-border bg-neutral-paper"
-      aria-label="Before and after comparison"
+  const sliderContent = (
+    <div
+      ref={containerRef}
+      className="relative w-full rounded-2xl overflow-hidden select-none border border-neutral-border bg-stone-100 ring-1 ring-stone-200/50 ring-offset-2 ring-offset-neutral-paper"
+        style={{
+        aspectRatio: "16/9",
+        boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06), 0 10px 28px rgba(0,0,0,0.08)",
+      }}
     >
-      <div className="section-container">
-        <div
-          ref={containerRef}
-          className="relative w-full mx-auto max-w-2xl rounded-xl overflow-hidden select-none border border-neutral-border bg-stone-100 ring-1 ring-stone-200/50 ring-offset-2 ring-offset-neutral-paper"
-          style={{
-            aspectRatio: "16/10",
-            boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06), 0 10px 28px rgba(0,0,0,0.08)",
-          }}
-        >
           {/* Base layer: Before (left side) */}
           <div className="absolute inset-0">
             <img
@@ -144,6 +138,22 @@ const BeforeAfterSlider = () => {
               </svg>
             </div>
           </div>
+        </div>
+  );
+
+  if (embedded) {
+    return sliderContent;
+  }
+
+  return (
+    <section
+      id="compare"
+      className="section-padding border-t border-neutral-border bg-neutral-paper"
+      aria-label="Before and after comparison"
+    >
+      <div className="section-container">
+        <div className="mx-auto max-w-2xl">
+          {sliderContent}
         </div>
       </div>
     </section>
