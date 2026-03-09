@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const WHATSAPP_NUMBER = "2347025389146"; // Nigeria: 234 + 7025389146 (no leading 0)
+const WHATSAPP_NUMBER = "2348131160088"; // Nigeria: 234 + 8131160088 (no leading 0)
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
 const WhatsAppFloat = () => {

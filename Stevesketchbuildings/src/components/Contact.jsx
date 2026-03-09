@@ -32,7 +32,7 @@ const Contact = () => {
               </div>
               <div>
                 <dt className="label-muted">Phone</dt>
-                <dd className="mt-1"><a href="tel:+2347025389146" className="text-stone-900 hover:text-accent">+234 702 538 9146</a></dd>
+                <dd className="mt-1"><a href="tel:+2348131160088" className="text-stone-900 hover:text-accent">+234 813 116 0088</a></dd>
               </div>
             </dl>
           </div>
