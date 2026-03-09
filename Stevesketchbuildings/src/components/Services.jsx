@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { services } from "../data/services";
 
 const ServiceDetailModal = ({ service, onClose }) => {
@@ -44,18 +44,24 @@ const ServiceDetailModal = ({ service, onClose }) => {
   );
 };
 
-const SCROLL_STEP = 2;
-const SCROLL_INTERVAL_MS = 40;
-const PAUSE_AFTER_INTERACTION_MS = 2500;
-const MOBILE_MAX_WIDTH = 767;
+const SCROLL_STEP = 1;
+const SCROLL_INTERVAL_MS = 25;
+const PAUSE_AFTER_INTERACTION_MS = 3000;
+const MOBILE_MAX_WIDTH = 768;
 
 const Services = () => {
   const [selectedService, setSelectedService] = useState(null);
+  const [scrollContainerReady, setScrollContainerReady] = useState(false);
   const scrollRef = useRef(null);
   const sectionRef = useRef(null);
   const pausedRef = useRef(false);
   const pauseTimeoutRef = useRef(null);
   const intervalRef = useRef(null);
+
+  const setScrollRef = (el) => {
+    scrollRef.current = el;
+    if (el) setScrollContainerReady(true);
+  };
 
   const pauseAutoScroll = () => {
     pausedRef.current = true;
@@ -66,12 +72,17 @@ const Services = () => {
     }, PAUSE_AFTER_INTERACTION_MS);
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    if (!scrollContainerReady) return;
+
     const mediaQuery = window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH}px)`);
+    let startTimeoutId = null;
 
     const startAutoScroll = () => {
       if (intervalRef.current) return;
       if (!mediaQuery.matches) return;
+      const el = scrollRef.current;
+      if (!el) return;
 
       intervalRef.current = setInterval(() => {
         const el = scrollRef.current;
@@ -99,12 +110,12 @@ const Services = () => {
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting && mediaQuery.matches) {
-          requestAnimationFrame(() => requestAnimationFrame(startAutoScroll));
+          startTimeoutId = setTimeout(startAutoScroll, 200);
         } else {
           stopAutoScroll();
         }
       },
-      { threshold: 0.1, rootMargin: "0px" }
+      { threshold: 0.15, rootMargin: "0px" }
     );
 
     observer.observe(section);
@@ -112,7 +123,7 @@ const Services = () => {
     if (mediaQuery.matches) {
       const rect = section.getBoundingClientRect();
       const inView = rect.top < window.innerHeight && rect.bottom > 0;
-      if (inView) requestAnimationFrame(() => requestAnimationFrame(startAutoScroll));
+      if (inView) startTimeoutId = setTimeout(startAutoScroll, 300);
     }
 
     const onMediaChange = () => {
@@ -121,35 +132,41 @@ const Services = () => {
       } else {
         const r = section.getBoundingClientRect();
         if (r.top < window.innerHeight && r.bottom > 0) {
-          requestAnimationFrame(() => requestAnimationFrame(startAutoScroll));
+          setTimeout(startAutoScroll, 100);
         }
       }
     };
     mediaQuery.addEventListener("change", onMediaChange);
 
     return () => {
+      if (startTimeoutId) clearTimeout(startTimeoutId);
       observer.disconnect();
       mediaQuery.removeEventListener("change", onMediaChange);
       stopAutoScroll();
       if (pauseTimeoutRef.current) clearTimeout(pauseTimeoutRef.current);
     };
-  }, []);
+  }, [scrollContainerReady]);
 
   return (
     <section ref={sectionRef} id="services" className="section-padding bg-white">
       <div className="section-container">
         <div className="mb-8 md:mb-16">
-          <h2 className="section-heading">Services</h2>
-          <p className="mt-3 md:mt-4 max-w-2xl text-stone-600 text-sm md:text-base">
-            Construction-ready documentation for industrial and architectural projects.
-          </p>
+          <div className="border-l-[10px] border-accent pl-4 md:pl-5">
+            <h2 className="font-display font-bold uppercase text-xl md:text-2xl lg:text-3xl tracking-tight">
+              <span className="text-stone-900">SERVICES</span>
+              <span className="text-accent"> WE OFFER</span>
+            </h2>
+            <p className="mt-3 md:mt-4 max-w-2xl text-stone-600 text-sm md:text-base leading-relaxed">
+              Construction-ready documentation for industrial and architectural projects.
+            </p>
+          </div>
         </div>
 
         {/* Mobile: horizontal scroll strip with auto-scroll */}
         <div className="md:hidden w-full overflow-hidden min-w-0">
           <p className="text-xs font-medium text-stone-500 uppercase tracking-wider mb-3">Swipe to explore</p>
           <div
-            ref={scrollRef}
+            ref={setScrollRef}
             onTouchStart={pauseAutoScroll}
             onPointerDown={pauseAutoScroll}
             onWheel={pauseAutoScroll}

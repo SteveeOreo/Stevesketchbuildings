@@ -43,10 +43,16 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+  @media (max-width: 639px) {
+    .touch-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
 }
 
 .section-container {
-  @apply max-w-section mx-auto px-6 lg:px-8;
+  @apply max-w-section mx-auto px-5 sm:px-6 lg:px-8;
 }
 
 .section-padding {

@@ -63,9 +63,8 @@ const BeforeAfterSlider = ({ embedded = false }) => {
   const sliderContent = (
     <div
       ref={containerRef}
-      className="relative w-full rounded-2xl overflow-hidden select-none border border-neutral-border bg-stone-100 ring-1 ring-stone-200/50 ring-offset-2 ring-offset-neutral-paper"
+      className="relative w-full rounded-xl sm:rounded-2xl overflow-hidden select-none border border-neutral-border bg-stone-100 ring-1 ring-stone-200/50 ring-offset-2 ring-offset-neutral-paper aspect-video"
         style={{
-        aspectRatio: "16/9",
         boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06), 0 10px 28px rgba(0,0,0,0.08)",
       }}
     >
