@@ -28,11 +28,11 @@ const Contact = () => {
             <dl className="mt-10 space-y-4">
               <div>
                 <dt className="label-muted">Email</dt>
-                <dd className="mt-1"><a href="mailto:Chukwusteve1@gmail.com" className="text-stone-900 hover:text-accent">Chukwusteve1@gmail.com</a></dd>
+                <dd className="mt-1"><a href="mailto:Stephen.ekwuemec@gmail.com" className="text-stone-900 hover:text-accent">Stephen.ekwuemec@gmail.com</a></dd>
               </div>
               <div>
                 <dt className="label-muted">Phone</dt>
-                <dd className="mt-1"><a href="tel:+2348131160088" className="text-stone-900 hover:text-accent">+234 813 116 0088</a></dd>
+                <dd className="mt-1"><a href="tel:+2348131160033" className="text-stone-900 hover:text-accent">+234 813 116 0033</a></dd>
               </div>
             </dl>
           </div>
